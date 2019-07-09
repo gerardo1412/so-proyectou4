@@ -15,13 +15,15 @@ public class Unidad4 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Disco disco = new Disco();
         Menu menu = new Menu();
+        Principal principal = new Principal(menu);
         int con = 0;
         while (con != 9){
             con = menu.menu();
             switch(con){
                 case 1:
+                    principal.formatearDisco();
+                    System.out.println("Disco creado.");
                     break;
                 case 2:
                     break;

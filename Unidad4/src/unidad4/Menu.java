@@ -58,4 +58,22 @@ public class Menu {
         return 0;
     }
     
+    public int formatearDisco(){
+        Scanner scanner = new Scanner(System.in);
+        int atributo = 0;
+        while (atributo == 0){
+            try{
+                System.out.println("Ingrese la cantidad de sectores que su disco posee\nhasta 126 sectores permitidos\n(Tome en cuenta de que los sectores de directorio y bitmap\nse crean por defecto): ");
+                atributo = scanner.nextInt();
+                if(atributo <= 0 || atributo > 126)
+                    throw new Exception();
+                return atributo + 2;
+            }
+            catch (Exception e){
+                System.out.println("Por favor, ingrese un numero entre 1 y 126.");
+                atributo = 0;
+            }
+        }
+        return atributo;
+    }
 }

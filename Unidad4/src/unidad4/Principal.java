@@ -11,6 +11,19 @@ package unidad4;
  */
 public class Principal {
     
+    private Disco disco;
+    private Menu menu;
+    
+    public Principal(Menu menu){
+        this.disco = new Disco();
+        this.menu = menu;
+    }
+    
+    public void formatearDisco(){
+        int numSectores = menu.formatearDisco();
+        disco.montarDisco(numSectores);
+    }
+    
     public void imprimirSector( Sector s ){
         int i = 0;
         for(byte b : s.getContenido()){
