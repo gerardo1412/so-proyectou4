@@ -76,4 +76,20 @@ public class Menu {
         }
         return atributo;
     }
+
+    public String[] crearArchivo() {
+        Scanner scanner = new Scanner(System.in);
+        int bandera = 0;
+        String[] archivo = {""};
+        while(bandera == 0){
+                System.out.println("Ingrese el nombre del archivo (sin su extension)\ny el numero de bloques que este ocupara\nseparados por un espacio.");
+                archivo = scanner.nextLine().split("\\s+");
+                if(archivo.length != 2){
+                    System.out.println("Por favor, ingrese el nombre del archivo (sin su extension)\ny el numero de bloques que este ocupara");
+                }
+                else
+                    return archivo;
+        }
+        return archivo;
+    }
 }

@@ -26,6 +26,7 @@ public class Unidad4 {
                     System.out.println("Disco creado.");
                     break;
                 case 2:
+                    principal.crearArchivo();
                     break;
                 case 3:
                     break;

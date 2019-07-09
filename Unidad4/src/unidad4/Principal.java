@@ -35,4 +35,12 @@ public class Principal {
             }
         }
     }
+
+    public void crearArchivo() {
+        
+        String[] archivo = menu.crearArchivo();
+        
+        for(String e: archivo)
+            System.out.println(e);
+    }
 }
