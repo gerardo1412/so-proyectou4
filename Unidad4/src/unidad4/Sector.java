@@ -35,5 +35,10 @@ public class Sector
 
     public void setContenido(byte[] contenido) {
         this.contenido = contenido;
-    }    
+    }
+
+    public void imprimirCantidadBits(){
+        System.out.println(contenido.length);
+    }
+            
 }

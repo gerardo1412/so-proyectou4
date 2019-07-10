@@ -92,4 +92,23 @@ public class Menu {
         }
         return archivo;
     }
+    
+    public int imprimirSector(int nSectores){
+        Scanner scanner = new Scanner(System.in);
+        int atributo = -1;
+        while (atributo == -1){
+            try{
+                System.out.println("Ingrese el numero del sector a imprimir: ");
+                atributo = scanner.nextInt();
+                if(atributo < 0 || atributo >= nSectores)
+                    throw new Exception();
+                return atributo;
+            }
+            catch (Exception e){
+                System.out.println("Por favor, ingrese un numero entre 0 y " + nSectores + " .");
+                atributo = -1;
+            }
+        }
+        return atributo;
+    }
 }
