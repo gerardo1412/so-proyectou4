@@ -37,6 +37,7 @@ public class Unidad4 {
                 case 6:
                     break;
                 case 7:
+                    principal.imprimirSector();
                     break;
                 case 8:
                     break;
