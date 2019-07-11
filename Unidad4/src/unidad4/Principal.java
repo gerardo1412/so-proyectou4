@@ -299,19 +299,57 @@ public class Principal {
 
     public void escribirArchivo(){
         
+        int opcion = menu.elegirOpcionEscritura();
+        
         String linea = menu.escribirArchivo();
         
-        String listadoDeBytes = "";
-        String bytesNoFormateados;
+        String listadoDeBytes;
         
+        if(opcion == 2)
+            listadoDeBytes = "";
+        else
+            listadoDeBytes = this.recuperarInformacionEscrita();
+        String bytesNoFormateados;
+
         for(Character c : linea.toCharArray()){
             bytesNoFormateados = Integer.toBinaryString(c);
             while(bytesNoFormateados.length() != 8)
                 bytesNoFormateados = "0" + bytesNoFormateados;
             listadoDeBytes = listadoDeBytes + bytesNoFormateados;
         }
-        
+
         this.escribirEnSectores(listadoDeBytes);
+        
+    }
+    
+    private String recuperarInformacionEscrita(){
+        
+        String lineaEscrita = "";
+        
+        int contador = 0;
+        int bandera = 0;
+        
+        while(bandera == 0 && contador<this.numeroSectores.size()){
+            int iterador = 0;
+            int contadorNull = 0;
+            byte[] listadoBytes = this.sectores.get(contador).getContenido();
+            while(bandera == 0 && iterador<512){
+                if(listadoBytes[iterador] == 48){
+                    contadorNull++;
+                    if (contadorNull == 8)
+                        bandera = 1;
+                }
+                else{
+                    contadorNull = 0;
+                }
+                lineaEscrita = lineaEscrita + ((char)Integer.parseInt(Integer.toBinaryString(listadoBytes[iterador]), 2));
+                iterador++;
+            }
+            contador++;
+        }
+        if(lineaEscrita.length()<512)
+            return lineaEscrita.substring(0, lineaEscrita.length()-8);
+        return lineaEscrita;
         
     }
     
@@ -322,8 +360,14 @@ public class Principal {
             while(linea.length()<512*nSectoresAOcupar)
                 linea = linea + "00000000";
             for(int i = 0; i<nSectoresAOcupar && i<this.numeroSectores.size(); i++){
-                this.sectores.get(i).setContenido(linea.getBytes());
-                disco.escribirSector(this.numeroSectores.get(i), this.sectores.get(i));
+                if(i == 0){
+                    this.sectores.get(i).setContenido(linea.getBytes());
+                    disco.escribirSector(this.numeroSectores.get(i), this.sectores.get(i));
+                }
+                else{
+                    this.sectores.get(i).setContenido(new Sector().getContenido());
+                    disco.escribirSector(this.numeroSectores.get(i), this.sectores.get(i));
+                }
             }
         }
         if(linea.length()>512){
@@ -334,5 +378,9 @@ public class Principal {
                 disco.escribirSector(this.numeroSectores.get(i), this.sectores.get(i));
             }
         }
+    }
+
+    void removerArchivo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -137,4 +137,23 @@ public class Menu {
         return linea;
     }
 
+    int elegirOpcionEscritura() {
+        Scanner scanner = new Scanner(System.in);
+        int atributo = -1;
+        while (atributo == -1){
+            try{
+                System.out.println("¿Desea continuar desde donde lo dejo?(1 para Si y 2 para No): ");
+                atributo = scanner.nextInt();
+                if(atributo != 1 && atributo != 2)
+                    throw new Exception();
+                return atributo;
+            }
+            catch (Exception e){
+                System.out.println("Por favor, ingrese una de las dos opciones.");
+                atributo = -1;
+            }
+        }
+        return atributo;
+    }
+
 }

@@ -29,11 +29,13 @@ public class Unidad4 {
                     principal.crearArchivo();
                     break;
                 case 3:
+                    principal.removerArchivo();
                     break;
                 case 4:
                     principal.leerArchivo();
                     break;
                 case 5:
+                    principal.imprimirSector();
                     break;
                 case 6:
                     principal.escribirArchivo();
@@ -42,7 +44,7 @@ public class Unidad4 {
                     principal.imprimirArchivo();
                     break;
                 case 8:
-                    principal.imprimirSector();
+                    
                     break;
                 case 9:
                     break;    
