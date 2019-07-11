@@ -87,6 +87,8 @@ public class Menu {
                 if(archivo.length != 2){
                     System.out.println("Por favor, ingrese el nombre del archivo (sin su extension)\ny el numero de bloques que este ocupara");
                 }
+                else if(archivo[0].length()<1 || archivo[0].length()>8)
+                    System.out.println("Por favor, ingrese el nombre del archivo (sin su extension)\ny el numero de bloques que este ocupara");
                 else
                     return archivo;
         }
@@ -154,6 +156,22 @@ public class Menu {
             }
         }
         return atributo;
+    }
+
+    String eliminarArchivo() {
+        Scanner scanner = new Scanner(System.in);
+        int bandera = 0;
+        String[] archivo = {""};
+        while(bandera == 0){
+                System.out.println("Ingrese el nombre del archivo (sin su extension).");
+                archivo = scanner.nextLine().split("\\s+");
+                if(archivo.length != 1){
+                    System.out.println("Por favor, ingrese el nombre del archivo (sin su extension).");
+                }
+                else
+                    return archivo[0];
+        }
+        return archivo[0];
     }
 
 }
