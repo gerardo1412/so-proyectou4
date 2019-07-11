@@ -111,4 +111,30 @@ public class Menu {
         }
         return atributo;
     }
+    
+    public String leerArchivo(){
+        Scanner scanner = new Scanner(System.in);
+        int bandera = 0;
+        String[] archivo = {""};
+        while(bandera == 0){
+                System.out.println("Ingrese el nombre del archivo (sin su extension).");
+                archivo = scanner.nextLine().split("\\s+");
+                if(archivo.length != 1){
+                    System.out.println("Por favor, ingrese el nombre del archivo (sin su extension).");
+                }
+                else
+                    return archivo[0];
+        }
+        return archivo[0];
+    }
+
+    String escribirArchivo() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Ingrese el texto que desea escribir.");
+        String linea = "";
+        while(linea.length()==0)
+            linea = scanner.nextLine();
+        return linea;
+    }
+
 }

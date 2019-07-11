@@ -31,15 +31,18 @@ public class Unidad4 {
                 case 3:
                     break;
                 case 4:
+                    principal.leerArchivo();
                     break;
                 case 5:
                     break;
                 case 6:
+                    principal.escribirArchivo();
                     break;
                 case 7:
-                    principal.imprimirSector();
+                    principal.imprimirArchivo();
                     break;
                 case 8:
+                    principal.imprimirSector();
                     break;
                 case 9:
                     break;    
