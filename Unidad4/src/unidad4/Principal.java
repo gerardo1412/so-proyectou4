@@ -19,12 +19,14 @@ public class Principal {
     private String nombreArchivo;
     private ArrayList<Sector> sectores;
     private ArrayList<Integer> numeroSectores;
+    private int archivoAbierto;
     
     public Principal(Menu menu){
         this.disco = new Disco();
         this.menu = menu;
         this.nombreArchivo = "";
         this.sectores = new ArrayList<>();
+        this.archivoAbierto = 0;
     }
     
     public void formatearDisco(){
@@ -33,20 +35,24 @@ public class Principal {
     }
     
     public void imprimirArchivo(){
-        String beat = "";
-        for(int i = 0, contador = 0; i<this.numeroSectores.size(); i++){
-            byte [] cadenaBytes = this.sectores.get(i).getContenido();
-            for(byte b : cadenaBytes){
-                beat = beat + ((char)Integer.parseInt(Integer.toBinaryString(b), 2));
-                contador++;
-                if (contador == 8){
-                    System.out.print(new Character((char)Integer.parseInt(beat, 2)));
-                    beat = "";
-                    contador = 0;
+        if(this.archivoAbierto == 1){
+            String beat = "";
+            for(int i = 0, contador = 0; i<this.numeroSectores.size(); i++){
+                byte [] cadenaBytes = this.sectores.get(i).getContenido();
+                for(byte b : cadenaBytes){
+                    beat = beat + ((char)Integer.parseInt(Integer.toBinaryString(b), 2));
+                    contador++;
+                    if (contador == 8){
+                        System.out.print(new Character((char)Integer.parseInt(beat, 2)));
+                        beat = "";
+                        contador = 0;
+                    }
                 }
             }
+            System.out.println("");
         }
-        System.out.println("");
+        else
+            System.out.println("No existe un archivo abierto");
     }
     
     public void imprimirSector(){
@@ -148,6 +154,105 @@ public class Principal {
         return bandera;
     }
     
+    void removerArchivo() {
+        if(this.archivoAbierto == 1){
+            String archivo = menu.eliminarArchivo();
+
+            String listadoDeBytes = "";
+            String bytesNoFormateados;
+
+
+            for(Character c : archivo.toCharArray()){
+                bytesNoFormateados = Integer.toBinaryString(c);
+                while(bytesNoFormateados.length() != 8)
+                    bytesNoFormateados = "0" + bytesNoFormateados;
+                listadoDeBytes = listadoDeBytes + bytesNoFormateados;
+            }
+            while(listadoDeBytes.length()<64)
+                listadoDeBytes = listadoDeBytes + "00000000";
+
+            this.busquedaPorNombreR(listadoDeBytes);
+        }
+        else
+            System.out.println("No hay ningun archivo abierto.");
+        
+    }
+    
+    private Sector busquedaPorNombreR(String listadoDeBytes) {
+        
+        byte[] directorio = disco.leerSector(0).getContenido();
+        byte[] listado = listadoDeBytes.getBytes();
+        byte[] direccion = "00000000".getBytes();
+        int bandera = 0;
+        int contador = 0;
+        
+        for(int i = 0, e = 0, salto = 0; i < 512; ){
+            if(directorio[i] == listado[e]){
+                e++;
+                if(e==64){
+                    bandera = 1;
+                    e=0;
+                }
+            }
+            else{
+                salto++;
+                e = 0;
+            }
+            i++;
+            if (bandera == 1){
+                direccion[contador] = directorio[i];
+                contador++;
+                if (contador == 8){
+                    
+                    this.archivoAbierto = 0;
+                    return this.getSectorR(direccion);
+                    
+                }
+            }
+        }
+        
+        return null;
+        
+    }
+    
+    private Sector getSectorR(byte[] direccion) {
+        
+        this.sectores = new ArrayList<>();
+        this.numeroSectores = new ArrayList<>();
+        
+        int nFcb = Integer.parseInt(new String(direccion), 2);
+        
+        byte[] fcb = disco.leerSector(nFcb).getContenido();
+        byte[] lSector = "00000000".getBytes();
+        byte[] bitmap = disco.leerSector(1).getContenido();
+        
+        for(int i = 0, e = 0,bandera = 0; bandera != 1; i++){
+            lSector[e] = fcb[i];
+            e++;
+            if(e == 8){
+                if(Integer.parseInt(new String(lSector), 2) == 0){
+                    bandera = 1;
+                    e = 0;
+                    System.out.println("Archivo no encontrado");
+                }
+                else{
+                    bitmap[Integer.parseInt(new String(lSector), 2)] = 48;
+                    e = 0;
+                    System.out.println("Eliminado sector: " + Integer.parseInt(new String(lSector), 2));
+                }
+            }
+        }
+        
+        bitmap[nFcb] = 48;
+        
+        Sector s = new Sector();
+        s.setContenido(bitmap);
+        disco.escribirSector(1, s);
+        System.out.println(this.sectores.size());
+        
+        return null;
+    }
+    
     public void leerArchivo(){
         String archivo = menu.leerArchivo();
         
@@ -199,8 +304,10 @@ public class Principal {
             if (bandera == 1){
                 direccion[contador] = directorio[i];
                 contador++;
-                if (contador == 8)
+                if (contador == 8){
+                    this.archivoAbierto = 1;
                     return this.getSector(direccion);
+                }
             }
         }
         
@@ -380,7 +487,5 @@ public class Principal {
         }
     }
 
-    void removerArchivo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 }
