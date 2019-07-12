@@ -247,7 +247,7 @@ public class Principal {
         int contador = 0;
         
         for(int i = 0, e = 0, salto = 0; i < 512; ){
-            if(directorio[i] == listado[e]){
+            if(directorio[i] == listado[e] && bandera==0){
                 e++;
                 if(e==64){
                     bandera = 1;
@@ -255,16 +255,25 @@ public class Principal {
                 }
             }
             else{
-                salto++;
-                e = 0;
+                if(bandera==0){
+                    salto++;
+                    i=(salto*72)-1;
+                    e = 0;
+                }
             }
             i++;
             if (bandera == 1){
+               
                 direccion[contador] = directorio[i];
                 contador++;
                 if (contador == 8){
                     
-                    this.archivoAbierto = 0;
+                     for(int contadorL = i-72; contadorL<i; contadorL++)
+                        directorio[contadorL] = 48;
+                    
+                    Sector dire = new Sector();
+                    dire.setContenido(directorio);
+                    disco.escribirSector(0, dire);
                     System.out.println("Sector Eliminado.");
                     return this.getSectorR(direccion);
                     
