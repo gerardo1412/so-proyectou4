@@ -376,8 +376,11 @@ public class Principal {
                 }
             }
             else{
-                salto++;
-                e = 0;
+                if(bandera == 0){
+                    salto++;
+                    i=(72*salto)-1;
+                    e = 0;
+                }
             }
             i++;
             if (bandera == 1){
