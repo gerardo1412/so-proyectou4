@@ -21,6 +21,10 @@ public class Principal {
     private ArrayList<Integer> numeroSectores;
     private int archivoAbierto;
     
+    /**
+     *
+     * @param menu
+     */
     public Principal(Menu menu){
         this.disco = new Disco();
         this.menu = menu;
@@ -29,11 +33,17 @@ public class Principal {
         this.archivoAbierto = 0;
     }
     
+    /**
+     *Permite formatear el disco, siendo necesario el ingresar un numero en el menu, el cual puede ir desde 1 hasta 126.
+     */
     public void formatearDisco(){
         int numSectores = menu.formatearDisco();
         disco.montarDisco(numSectores);
     }
     
+    /**
+     *Permite imprimir la información contenida en el archivo.
+     */
     public void imprimirArchivo(){
         if(this.archivoAbierto == 1){
             String beat = "";
@@ -55,6 +65,10 @@ public class Principal {
             System.out.println("No existe un archivo abierto");
     }
     
+    /**
+     *Imprime los bits contenidos en un sector, ordenados en forma de byte.
+     * Es necesario el ingresar un numero en el menu.
+     */
     public void imprimirSector(){
         int sector = menu.imprimirSector(disco.getNumSectores());
         Sector s = disco.leerSector(sector);
@@ -85,9 +99,51 @@ public class Principal {
                 System.out.print("\n");
             }*/
         }
-        s.imprimirCantidadBits();
+    }
+    
+    public void listarDisco(){
+        
+        Sector s = disco.leerSector(0);
+        int i = 0, e = 0;
+        byte[] byteList = "00000000".getBytes();
+        for(byte b : s.getContenido()){
+            //String str = new String(Character.toString((char) b).getBytes(), StandardCharsets.US_ASCII);
+            //System.out.println(str);
+            //System.out.print(Character.toString((char) b));
+            
+            byteList[i] = b;
+            i++;
+            if(i == 8){
+                i=0;
+                e++;
+                //System.out.print("\n");
+                
+                if(e != 9){
+                    char c = ((char)Integer.parseInt(new String(byteList) , 2));
+                    System.out.print(c);
+                }
+                else{
+                    int integer = Integer.parseInt(new String(byteList) , 2);
+                    if(integer != 0){
+                        System.out.print(" ");
+                        System.out.print(integer);
+                        System.out.println("\n");
+                    }
+                    e=0;
+                }
+            }
+            /*if (e == 9)
+            {
+                e = 0;
+                System.out.print("\n");
+            }*/
+        }
     }
 
+    /**
+     *Permite crear un archivo, el cual puede tener un nombre de hasta 8 caracteres, y puede tener una cantidad de sectores desde 1 hasta el máximo de sectores
+     * definidos al principio del programa.
+     */
     public void crearArchivo() {
         
         String[] archivo = menu.crearArchivo();
@@ -133,6 +189,11 @@ public class Principal {
             System.out.println("Disco lleno, no se puede escribir");
     }
     
+    /**
+     *Permite buscar los bits que representan a los sectores, 0 si es que estan disponibles
+     * y 1 si es que no lo estan.
+     * @return Posicion de un sector vacio o -1 si es que no existe ninguno.
+     */
     public int busquedaSector(){
         Sector sector = disco.leerSector(1);
         int bandera = 0;
@@ -155,7 +216,7 @@ public class Principal {
     }
     
     void removerArchivo() {
-        if(this.archivoAbierto == 1){
+        
             String archivo = menu.eliminarArchivo();
 
             String listadoDeBytes = "";
@@ -172,9 +233,8 @@ public class Principal {
                 listadoDeBytes = listadoDeBytes + "00000000";
 
             this.busquedaPorNombreR(listadoDeBytes);
-        }
-        else
-            System.out.println("No hay ningun archivo abierto.");
+        
+        
         
     }
     
@@ -205,12 +265,13 @@ public class Principal {
                 if (contador == 8){
                     
                     this.archivoAbierto = 0;
+                    System.out.println("Sector Eliminado.");
                     return this.getSectorR(direccion);
                     
                 }
             }
         }
-        
+        System.out.println("Archivo no encontrado.");
         return null;
         
     }
@@ -233,12 +294,10 @@ public class Principal {
                 if(Integer.parseInt(new String(lSector), 2) == 0){
                     bandera = 1;
                     e = 0;
-                    System.out.println("Archivo no encontrado");
                 }
                 else{
                     bitmap[Integer.parseInt(new String(lSector), 2)] = 48;
                     e = 0;
-                    System.out.println("Eliminado sector: " + Integer.parseInt(new String(lSector), 2));
                 }
             }
         }
@@ -248,11 +307,13 @@ public class Principal {
         Sector s = new Sector();
         s.setContenido(bitmap);
         disco.escribirSector(1, s);
-        System.out.println(this.sectores.size());
         
         return null;
     }
     
+    /**
+     *Permite cargar un archivo en el programa.
+     */
     public void leerArchivo(){
         String archivo = menu.leerArchivo();
         
@@ -404,6 +465,9 @@ public class Principal {
         return disco.leerSector(nFcb);
     }
 
+    /**
+     *Permite escribir informacion en los sectores correspondientes a un archivo.
+     */
     public void escribirArchivo(){
         
         int opcion = menu.elegirOpcionEscritura();

@@ -13,10 +13,16 @@ import java.util.Scanner;
  */
 public class Menu {
     
-    
+    /**
+     *
+     */
     public Menu(){
     }
     
+    /**
+     *Menu principal del programa
+     * @return Un numero que va desde 1 hasta 9, representando una de las posibles opciones mostradas en el menu.
+     */
     public int menu(){
         Scanner scanner = new Scanner(System.in);
         String atributo = "0";
@@ -26,7 +32,7 @@ public class Menu {
                 case "0":
                     System.out.println("Menu\n(1) para crear disco\n(2) para crear un archivo"
                             + "\n(3) para remover un archivo\n(4) para abrir un archivo"
-                            + "\n(5) para leer un archivo\n(6) para escribir dentro de un archivo"
+                            + "\n(5) para imprimir los bits dentro de un sector\n(6) para escribir dentro de un archivo"
                             + "\n(7) para imprimir lo que esta dentro de un archivo"
                             + "\n(8) para listar los archivos\n(9) para salir"
                             + "\nIngrese un numero: ");   
@@ -58,6 +64,10 @@ public class Menu {
         return 0;
     }
     
+    /**
+     *Menu para formatear el disco.
+     * @return Un numero entre 3 y 128.
+     */
     public int formatearDisco(){
         Scanner scanner = new Scanner(System.in);
         int atributo = 0;
@@ -77,6 +87,10 @@ public class Menu {
         return atributo;
     }
 
+    /**
+     *
+     * @return
+     */
     public String[] crearArchivo() {
         Scanner scanner = new Scanner(System.in);
         int bandera = 0;
@@ -95,6 +109,11 @@ public class Menu {
         return archivo;
     }
     
+    /**
+     *Permite imprimir un sector del disco.
+     * @param nSectores Cantidad de sectores que el disco posee.
+     * @return Espacio del disco a imprimir.
+     */
     public int imprimirSector(int nSectores){
         Scanner scanner = new Scanner(System.in);
         int atributo = -1;
@@ -114,6 +133,10 @@ public class Menu {
         return atributo;
     }
     
+    /**
+     *Menu para leer un archivo, es necesario de ingresar el nombre del archivo.
+     * @return El nombre del archivo a abrir.
+     */
     public String leerArchivo(){
         Scanner scanner = new Scanner(System.in);
         int bandera = 0;
@@ -122,6 +145,9 @@ public class Menu {
                 System.out.println("Ingrese el nombre del archivo (sin su extension).");
                 archivo = scanner.nextLine().split("\\s+");
                 if(archivo.length != 1){
+                    System.out.println("Por favor, ingrese el nombre del archivo (sin su extension).");
+                }
+                else if(archivo[0].length()<1 || archivo[0].length()>8){
                     System.out.println("Por favor, ingrese el nombre del archivo (sin su extension).");
                 }
                 else
@@ -168,9 +194,11 @@ public class Menu {
                 if(archivo.length != 1){
                     System.out.println("Por favor, ingrese el nombre del archivo (sin su extension).");
                 }
+                else if(archivo[0].length()<1 || archivo[0].length()>8){
+                    System.out.println("Por favor, ingrese el nombre del archivo (sin su extension).");
+                }
                 else
-                    return archivo[0];
-        }
+                    return archivo[0];        }
         return archivo[0];
     }
 
