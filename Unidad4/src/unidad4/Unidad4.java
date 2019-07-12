@@ -44,7 +44,7 @@ public class Unidad4 {
                     principal.imprimirArchivo();
                     break;
                 case 8:
-                    
+                    principal.listarDisco();
                     break;
                 case 9:
                     break;    

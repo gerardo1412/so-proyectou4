@@ -25,12 +25,19 @@ public class Disco
     private File archivoDeDisco;
     private int numSectores;
     
+    /**
+     *
+     */
     public Disco()
     {
         this.numSectores = 0;
         this.archivoDeDisco = new File("DISCO");
     }
     
+    /**
+     *
+     * @param numSectores
+     */
     public void montarDisco(int numSectores)
     {
         this.numSectores = numSectores;
@@ -57,6 +64,11 @@ public class Disco
         }
     }    
     
+    /**
+     *
+     * @param numSector
+     * @return
+     */
     public Sector leerSector(int numSector)
     {		
         if(this.numSectores >= numSector && numSector >= 0)
@@ -90,6 +102,11 @@ public class Disco
         return null;
     }
 	
+    /**
+     *
+     * @param numSector
+     * @param sector
+     */
     public void escribirSector(int numSector, Sector sector)
     {
         try {
@@ -107,7 +124,10 @@ public class Disco
         }
     }
    
-    
+    /**
+     *
+     * @return
+     */
     public int getNumSectores() {
         return this.numSectores;
     }
