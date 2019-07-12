@@ -20,6 +20,7 @@ public class Principal {
     private ArrayList<Sector> sectores;
     private ArrayList<Integer> numeroSectores;
     private int archivoAbierto;
+    private boolean comprobarExisteArchivo;
     
     /**
      *
@@ -160,33 +161,41 @@ public class Principal {
         while(listadoDeBytes.length()<64)
             listadoDeBytes = listadoDeBytes + "00000000";
         
-        int nSectorInt =  busquedaSector();
-        String nSector = Integer.toBinaryString(nSectorInt);
         String numSectores = archivo[1];
         
-        while(nSector.length() != 8)
-                nSector = "0" + nSector;
-        listadoDeBytes = listadoDeBytes + nSector;
-        if(this.comprobarEspaciosLibres(Integer.parseInt(numSectores))){
-            int nuevoSector = this.comprobarEscritura(listadoDeBytes, nSectorInt);
+        if(!this.comprobarExisteArchivo(listadoDeBytes)){
+            if(this.comprobarEspaciosLibres(Integer.parseInt(numSectores))){
 
-            System.out.println(archivo.length);
+                int nSectorInt =  busquedaSector();
+                String nSector = Integer.toBinaryString(nSectorInt);
 
-            if(nuevoSector != -1){
-                String sectorEsc = "";
-                
-                for(int contador = 0; contador < Integer.parseInt(numSectores); contador++){
-                    int nSectorEscritura = busquedaSector();
-                    String nSectorEscString = Integer.toBinaryString(nSectorEscritura);
-                    while (nSectorEscString.length() < 8)
-                        nSectorEscString = "0" + nSectorEscString;
-                    sectorEsc = sectorEsc + nSectorEscString;
+
+                while(nSector.length() != 8)
+                        nSector = "0" + nSector;
+                listadoDeBytes = listadoDeBytes + nSector;
+
+                int nuevoSector = this.comprobarEscritura(listadoDeBytes, nSectorInt);
+
+                System.out.println(archivo.length);
+
+                if(nuevoSector != -1){
+                    String sectorEsc = "";
+
+                    for(int contador = 0; contador < Integer.parseInt(numSectores); contador++){
+                        int nSectorEscritura = busquedaSector();
+                        String nSectorEscString = Integer.toBinaryString(nSectorEscritura);
+                        while (nSectorEscString.length() < 8)
+                            nSectorEscString = "0" + nSectorEscString;
+                        sectorEsc = sectorEsc + nSectorEscString;
+                    }
+                    this.escribirInformacionArchivo(disco.leerSector(nuevoSector), sectorEsc, 0, nuevoSector);
                 }
-                this.escribirInformacionArchivo(disco.leerSector(nuevoSector), sectorEsc, 0, nuevoSector);
             }
+            else
+                System.out.println("Disco lleno, no se puede escribir");
         }
         else
-            System.out.println("Disco lleno, no se puede escribir");
+            System.out.println("Ya existe un archivo con este nombre en el disco");
     }
     
     /**
@@ -268,7 +277,7 @@ public class Principal {
                 contador++;
                 if (contador == 8){
                     
-                     for(int contadorL = i-72; contadorL<i; contadorL++)
+                     for(int contadorL = i-71; contadorL<i; contadorL++)
                         directorio[contadorL] = 48;
                     
                     Sector dire = new Sector();
@@ -388,7 +397,7 @@ public class Principal {
     private boolean comprobarEspaciosLibres(int nSectoresO){
         Sector sector = disco.leerSector(1);
         int nSLibres = 0;
-        for(int random = 2; random < disco.getNumSectores(); random++){
+        for(int random = 2; random < (disco.getNumSectores()); random++){
             if((sector.getContenido())[random] != 49)
                 nSLibres++;
         }
@@ -558,6 +567,29 @@ public class Principal {
                 disco.escribirSector(this.numeroSectores.get(i), this.sectores.get(i));
             }
         }
+    }
+
+    private boolean comprobarExisteArchivo(String nombre) {
+        
+        byte[] directorio = disco.leerSector(0).getContenido();
+        byte[] listado = nombre.getBytes();
+        
+        for(int i = 0, e = 0, salto = 0; i < 512; ){
+            if(directorio[i] == listado[e]){
+                e++;
+                if(e==64){
+                    return true;
+                    
+                }
+            }
+            else{
+                salto++;
+                i = (salto*72)-1;
+                e = 0;
+            }
+            i++;
+        }
+        return false;
     }
 
     
